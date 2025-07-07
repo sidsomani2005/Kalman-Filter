@@ -26,3 +26,11 @@ class ExtendedKalmanFilter:
         self.P = P
         self.x = x0
         self.I = np.eye(len(x0))
+
+    def predict(self, u=None):
+        F = self.F_jacobian(self.x, u)
+        self.x = self.f(self.x, u) if u is not None else self.f(self.x)
+        self.P = F @ self.P @ F.T + self.Q
+        self.P = (self.P + self.P.T) / 2 # ensuring symmetry of covariance matrix
+        
+        return self.x.copy()
