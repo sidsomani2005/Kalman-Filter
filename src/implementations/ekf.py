@@ -27,8 +27,6 @@ class ExtendedKalmanFilter:
         self.x = x0
         self.I = np.eye(len(x0))
 
-        self._validate_initial_parameters()
-
 
     def predict(self, u=None):
         F = self.F_jacobian(self.x, u)
