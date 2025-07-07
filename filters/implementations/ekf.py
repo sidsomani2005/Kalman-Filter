@@ -27,6 +27,9 @@ class ExtendedKalmanFilter:
         self.x = x0
         self.I = np.eye(len(x0))
 
+        self._validate_initial_parameters()
+
+
     def predict(self, u=None):
         F = self.F_jacobian(self.x, u)
         self.x = self.f(self.x, u) if u is not None else self.f(self.x)
@@ -34,3 +37,34 @@ class ExtendedKalmanFilter:
         self.P = (self.P + self.P.T) / 2 # ensuring symmetry of covariance matrix
         
         return self.x.copy()
+    
+
+    def update(self, z):
+        H = self.H_jacobian(self.x)
+        y = z - self.h(self.x)
+        S = H @ self.P @ H.T + self.R
+        S = (S + S.T) / 2
+        
+        try:
+            # kalman gain
+            K = self.P @ H.T @ np.linalg.inv(S)
+        
+        except np.linalg.LinAlgError:
+            K = self.P @ H.T @ np.linalg.pinv(S)
+        
+        self.x = self.x + K @ y
+        
+        # using Joseph form for numerical stability
+        I_KH = self.I - K @ H
+        self.P = I_KH @ self.P @ I_KH.T + K @ self.R @ K.T
+        
+        self.P = (self.P + self.P.T) / 2
+        
+        return self.x.copy()
+
+
+    def get_state(self):
+        return self.x.copy()
+
+    def get_covariance(self):
+        return self.P.copy()
