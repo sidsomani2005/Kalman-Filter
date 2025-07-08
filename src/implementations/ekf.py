@@ -5,9 +5,6 @@ from scipy.linalg import sqrtm
 class ExtendedKalmanFilter:
     def __init__(self, f, h, F_jacobian, H_jacobian, Q, R, P, x0):
         """
-        Initialize the Extended Kalman Filter.
-
-        Parameters:
         f - Function for state transition: f(x, u)
         h - Function for measurement prediction: h(x)
         F_jacobian - Function returning Jacobian of f with respect to x
