@@ -12,7 +12,7 @@ Comparative experiments investigating the Kalman Filter and performance compared
 
 ### 2. Non-linear Models
 - Extended Kalman Filter
-- Uuscented Kalman Filter
+- Unscented Kalman Filter
 
 <br>
 
